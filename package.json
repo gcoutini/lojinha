@@ -23,7 +23,6 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "mongoose": "^5.9.3",
-    "mysql": "^2.18.1",
     "pug": "^2.0.4",
     "util.promisify": "^1.0.1"
   },
