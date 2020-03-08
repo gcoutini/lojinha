@@ -1,0 +1,32 @@
+{
+  "name": "lojinha",
+  "version": "1.0.0",
+  "description": "Controle de vendas para comércio",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/gcoutini/lojinha.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/gcoutini/lojinha/issues"
+  },
+  "homepage": "https://gitlab.com/gcoutini/lojinha#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "mysql": "^2.18.1",
+    "pug": "^2.0.4",
+    "util.promisify": "^1.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
