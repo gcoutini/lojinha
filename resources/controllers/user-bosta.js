@@ -1,4 +1,4 @@
-const pool = require('./pool');
+const pool = require('../../core/pool');
 const bcryptjs = require('bcryptjs');
 
 
@@ -13,6 +13,7 @@ User.prototype = {
             //if user = number return field = id, if user = string return field = username
             var field = Number.isInteger(user) ? 'id' : 'username';
         }
+        
         // prepare the sql query
         let sql = `SELECT * FROM users WHERE ${field} = ?`;
 

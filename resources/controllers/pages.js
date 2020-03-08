@@ -1,12 +1,7 @@
-const express = require('express');
-const User = require('../core/user');
-const router = express.Router();
+const User = require('../models/User');
+const bcryptjs = require('bcryptjs');
 
-// create an object from the class User in the file core/user.js
-const user = new User();
-
-// get index page
-router.get('/', (req, res, next) => {
+const index = (req, res) => {
     let user = req.session.user;
     // If there is a session named user that means the user is loggedin, so we redirect him to home page by using /home route below
     if(user) {
@@ -15,10 +10,9 @@ router.get('/', (req, res, next) => {
     }
     // IF not we just send the index page.
     res.render('index', {title:"My application"});
-})
+};
 
-// Get home page
-router.get('/home', (req, res, next) => {
+const home = (req, res) => {
     let user = req.session.user;
 
     if(user) {
@@ -26,10 +20,21 @@ router.get('/home', (req, res, next) => {
         return;
     }
     res.redirect('/');
-});
+};
 
- // Post login data
-router.post('/login', (req, res, next) => {
+const login = async (req, res) => {
+    const user = await User.findOne({ username: req.body.username });
+    
+    if (!user) return res.send('Username not found!');
+    
+    if(!await bcryptjs.compare(req.body.password, user.password)) return res.send('Username/Password incorrect!');
+
+    req.session.user = user;
+    req.session.opp = 1;
+    res.redirect('/home');
+};
+
+const login2 = (req, res) => {
     // The data sent from the user are stored in the req.body.object
     // call our login function and it will return the result(the user data)
     user.login(req.body.username, req.body.password, function(result) {
@@ -44,43 +49,35 @@ router.post('/login', (req, res, next) => {
             res.send('Username/Password incorrect!');
         }
     })
+}
 
-});
+const register = async (req, res) => {
+    req.body.password = await bcryptjs.hash(req.body.password, 10);
 
-
-// Post register data
-router.post('/register', (req, res, next) => {
-    
-    let userInput = {
+    const userInput = {
         username: req.body.username,
-        fullname: req.body.fullname,
+        fullName: req.body.fullname,
         password: req.body.password
     };
 
-    user.create(userInput, function(lastId) {
-        if(lastId) {
-            
-            user.find(lastId, function(result) {
-                req.session.user = result;
-                req.session.opp = 0;
-                res.redirect('/home');
-            });
+    const user = await User.create(userInput);
+    req.session.user = user;
+    req.session.opp = 0;
+    res.redirect('/home');
+};
 
-        }else {
-            console.log('Error creating a new user ...');
-        }
-    });
-});
-
-
-// Get logout page
-router.get('/logout', (req, res, next) => {
+const logout = (req, res) => {
     if(req.session.user) {
         req.session.destroy(function () {
             res.redirect('/');
         });
     }
-});
+}
 
-
-module.exports = router;
+module.exports = {
+    index,
+    home,
+    login,
+    register,
+    logout
+}
